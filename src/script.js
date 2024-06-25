@@ -25,4 +25,21 @@ document.getElementById('mensajeForm').addEventListener('submit', function(event
         console.error('Error:', error);
         alert('Error al enviar el mensaje');
     });
+
+    app.get('/', (req, res) => {
+        res.sendFile(__dirname + '/public/Registro-Cod-Mobile.html');
+      });
 });
+
+
+// ========> Envío los datos al servidor <=========
+/*const xhr = new XMLHttpRequest();
+xhr.open('POST', '/enviar', true);
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4 && xhr.status === 200) {
+    alert(xhr.responseText);
+    formulario.reset();
+  }
+};
+xhr.send(formData);
+});*/

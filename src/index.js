@@ -16,3 +16,7 @@ whatsapp.initialize();
 app.listen(puerto, ()=>{
   console.log(`Server on port ${puerto}`)
 });
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/front.html');
+});
