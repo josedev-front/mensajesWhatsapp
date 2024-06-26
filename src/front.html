@@ -14,6 +14,8 @@
         <textarea id="mensaje" name="mensaje" required></textarea><br><br>
         <button type="submit">Enviar</button>
     </form>
+   <!-- <div id="consoleOutput" style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; height: 300px; overflow-y: scroll;"></div>-->
+    <div id="qrCode" style="margin-top: 20px;"></div>
 
     <script>
         document.getElementById('mensajeForm').addEventListener('submit', function(event) {
@@ -44,6 +46,38 @@
                 alert('Error al enviar el mensaje');
             });
         });
+
+        const ws = new WebSocket('ws://localhost:3000');
+
+        ws.onopen = () => {
+            console.log('Connected to the WebSocket server');
+        };
+
+        ws.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            const consoleOutput = document.getElementById('consoleOutput');
+
+            if (message.type === 'log' || message.type === 'message') {
+                const logMessage = document.createElement('div');
+                logMessage.textContent = message.data;
+                consoleOutput.appendChild(logMessage);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight; // Scroll to the bottom
+            } else if (message.type === 'qr') {
+                const qrCodeDiv = document.getElementById('qrCode');
+                qrCodeDiv.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(message.data)}`;
+                qrCodeDiv.appendChild(img);
+            }
+        };
+
+        ws.onclose = () => {
+            console.log('Disconnected from the WebSocket server');
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
     </script>
 </body>
 </html>
